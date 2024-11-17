@@ -9,7 +9,7 @@
     "dev": "export NODE_ENV=development; webpack serve --open & node server/server.js"
   },
   "author": "Joe Paul, Andrew Lo, Jordan Woods, Jordan Buranskas",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
