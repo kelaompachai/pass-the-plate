@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/server.js",
     "build": "export NODE_ENV=production; webpack",
