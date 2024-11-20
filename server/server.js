@@ -9,11 +9,19 @@ const listingsController = require('./controllers/listingsController');
 const app = express();
 
 // parse the req.body, the cookies, and urlencoded data
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(express.static('dist'));
+app.get('/', (req, res) => {
+  // need to check for cookie, send home.html if cookie is present
+  // otherwise send index.html
+  res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+});
+
+app.get('/login.bundle.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dist', 'login.bundle.js'));
+});
 
 app.post('/signup', userController.createUser, (req, res) => {
   console.log('new user request body in server: ', req.body);
