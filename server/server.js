@@ -24,7 +24,7 @@ app.get('/login.bundle.js', (req, res) => {
 });
 
 app.post('/signup', userController.createUser, (req, res) => {
-  console.log('new user request body in server: ', req.body);
+  res.redirect('/');
 });
 
 

@@ -1,4 +1,3 @@
-const cookieParser = require('cookie-parser');
 const db = require('../models/foodbankModel');
 
 
@@ -14,7 +13,7 @@ userController.verifyUser = (req, res, next) => {
   // res.redirect('/redirect')
   // find user in database
   // console.log('testing userReqBod: ', userReqBod)
-  const queryString = `SELECT username, password, zipcode, id FROM "user" WHERE username = '${userReqBod.username}' AND password = '${userReqBod.password}' AND zipcode = ${userReqBod.zipcode}`;
+  const queryString = `SELECT username, password, zipcode, id FROM "users" WHERE username = '${userReqBod.username}' AND password = '${userReqBod.password}' AND zipcode = ${userReqBod.zipcode}`;
   db.query(queryString)
     .then((data) => {
       // console.log('request body in verifyUser controller: ', userReqBod)
@@ -91,11 +90,18 @@ userController.getComments = (req, res, next) => {
 
 
 userController.createUser = (req, res, next) => {
+  console.log('entered createUser');
+  console.log(req.body);
+
   // create user in database
-  // if username already exists, redirect to default path '/'
-  // if user is successfully created, redirect to home page
-  res.redirect('/redirect');
-  return next();
+  const params = [req.body.username, req.body.password, req.body.zipcode];
+  const query = 'INSERT INTO users VALUES ($1, $2, $3);';
+
+  db.query(query, params)
+    // if user is created successfully, go to set cookie middleware
+    .then((response) => next())
+    // otherwise go to universal error handler
+    .catch((err) => next(err.error));
 };
 
 
