@@ -99,7 +99,10 @@ userController.createUser = (req, res, next) => {
 
   db.query(query, params)
     // if user is created successfully, go to set cookie middleware
-    .then((response) => next())
+    .then((response) => {
+      res.locals.username = req.body.username;
+      next();
+    })
     // otherwise go to universal error handler
     .catch((err) => next(err.error));
 };

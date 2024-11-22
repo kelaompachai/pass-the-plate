@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 
 const userController = require('./controllers/userController');
 const listingsController = require('./controllers/listingsController');
+const cookieController = require('./controllers/cookieController');
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.get('/login.bundle.js', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dist', 'login.bundle.js'));
 });
 
-app.post('/signup', userController.createUser, (req, res) => {
+app.post('/signup', userController.createUser, cookieController.addCookie, (req, res) => {
   res.redirect('/');
 });
 
