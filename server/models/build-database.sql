@@ -15,6 +15,6 @@ CREATE DATABASE passtheplate OWNER passtheplate;
 
 CREATE TABLE users (
   username VARCHAR(15) PRIMARY KEY,
-  password VARCHAR(15) NOT NULL,
+  password VARCHAR(50) NOT NULL,
   zipcode VARCHAR(5) NOT NULL
 );

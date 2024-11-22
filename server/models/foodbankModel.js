@@ -1,11 +1,16 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const PG_URI = process.env.DATABASE_URI;
 
 const pool = new Pool({
-  connectionString: PG_URI,
+  host: process.env.PGHOST,
+  port: process.env.PGPORT,
+  user: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: process.env.PGDATABASE,
+  max: 10,
 });
+
 
 module.exports = {
   query: (text, params, callback) => {
