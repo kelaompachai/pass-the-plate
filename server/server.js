@@ -14,14 +14,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  // need to check for cookie, send home.html if cookie is present
-  // otherwise send index.html
-  res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+app.get('/', cookieController.checkForCookie, (req, res) => {
+  // if browser has session cookie, send homepage
+  if (res.locals.authenticated) res.sendFile(path.join(__dirname, '..', 'dist', 'home.html'));
+  // otherwise send authentication page
+  else res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
 });
 
 app.get('/login.bundle.js', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dist', 'login.bundle.js'));
+});
+
+app.get('/home.bundle.js', cookieController.checkForCookie, (req, res) => {
+  if (res.locals.authenticated) res.sendFile(path.join(__dirname, '..', 'dist', 'home.bundle.js'));
+  else res.status(403).send();
 });
 
 app.post('/signup', userController.createUser, cookieController.addCookie, (req, res) => {
@@ -29,13 +35,8 @@ app.post('/signup', userController.createUser, cookieController.addCookie, (req,
 });
 
 
-app.post('/login', userController.verifyUser, (req, res) => {
-  // console.log("request body in server: ", req.body)
-  // res.status(200).json(res.locals.activitySave)
-  res.cookie('username', res.locals.username);
-  res.cookie('zipcode', res.locals.zipcode);
-  res.cookie('userID', res.locals.userID);
-  res.status(200).sendFile(path.resolve(__dirname, '../dist/home.html'));
+app.post('/login', userController.verifyUser, cookieController.addCookie, (req, res) => {
+  res.redirect('/');
 });
 
 

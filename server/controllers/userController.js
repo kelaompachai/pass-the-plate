@@ -7,29 +7,21 @@ let userReqBod;
 // let newUserReqBod;
 
 userController.verifyUser = (req, res, next) => {
-  // console.log("request body in Originalcontroller: ", req.body)
-  console.log(req.body);
-  userReqBod = req.body;
-  // res.redirect('/redirect')
+  console.log('entered userController.verifyUser');
+  console.log('req.body in verifyUser: ', req.body);
+
+  const params = [req.body.username, req.body.password];
+  const query = 'SELECT username, password, zipcode FROM "users" WHERE username = $1 AND password = $2;';
+
+
   // find user in database
-  // console.log('testing userReqBod: ', userReqBod)
-  const queryString = `SELECT username, password, zipcode, id FROM "users" WHERE username = '${userReqBod.username}' AND password = '${userReqBod.password}' AND zipcode = ${userReqBod.zipcode}`;
-  db.query(queryString)
+  db.query(query, params)
     .then((data) => {
-      // console.log('request body in verifyUser controller: ', userReqBod)
-      // console.log('should log user inputted in login form', data.rows)
-      if (data.rows.length !== 0) {
-        // if user is found, redirect to home page (currently set to '/listings')
+      if (data.rows.length === 1) {
         console.log('user found!', data.rows);
-        res.locals.username = data.rows[0].username;
         res.locals.zipcode = data.rows[0].zipcode;
-        res.locals.userID = data.rows[0].id;
-        return next();
-        // res.redirect('/home')
       }
-      // if user cannot be found, redirect to default path '/'
-      // console.log('user not found...', data.rows)
-      return res.redirect('/');
+      return next();
     })
     .catch((err) => {
       console.error('Error in verifyUser middleware: ', err);
@@ -100,7 +92,7 @@ userController.createUser = (req, res, next) => {
   db.query(query, params)
     // if user is created successfully, go to set cookie middleware
     .then((response) => {
-      res.locals.username = req.body.username;
+      res.locals.zipcode = req.body.zipcode;
       next();
     })
     // otherwise go to universal error handler
